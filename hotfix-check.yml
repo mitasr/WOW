@@ -1,0 +1,42 @@
+name: 🔄 WoW Hotfix Auto-Update
+
+on:
+  schedule:
+    - cron: '0 */3 * * *'   # každé 3 hodiny
+  workflow_dispatch:          # možnost spustit ručně
+
+permissions:
+  contents: write             # potřeba pro git push
+
+jobs:
+  check-and-update:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: pip install requests beautifulsoup4 anthropic
+
+      - name: Run hotfix updater
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: python scripts/update_hotfixes.py
+
+      - name: Commit & push if changed
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          if git diff --staged --quiet; then
+            echo "✓ Žádné změny, nic se necommituje."
+          else
+            git commit -m "🔄 Auto-update hotfixů – $(date -u +'%Y-%m-%d %H:%M UTC')"
+            git push
+            echo "✅ Změny pushnuty."
+          fi
