@@ -1846,12 +1846,6 @@ function buildDetailHTML(id) {
 
   const center = `
     <div class="pd-center">
-      <div class="pd-portrait">
-        ${renderUrl
-          ? `<img src="${renderUrl}" alt="${profile.name}" onerror="this.style.display='none'">`
-          : `<div style="height:100%;display:flex;align-items:center;justify-content:center;font-size:60px;color:var(--txd)">👤</div>`}
-        <div class="pd-portrait-overlay"></div>
-      </div>
       <div class="pd-char-info">
         <div class="pd-char-name">${profile.name}</div>
         <div class="pd-char-spec" style="color:${classColor};text-shadow:0 0 14px ${classColor}55;">
@@ -1875,6 +1869,12 @@ function buildDetailHTML(id) {
           ${profile.achievement_points !== undefined ? `<div class="pd-meta-row">🏆 ${profile.achievement_points.toLocaleString()} pts</div>` : ''}
           ${profile.last_login_timestamp ? `<div class="pd-meta-row">🕒 ${new Date(profile.last_login_timestamp).toLocaleDateString('en-GB')}</div>` : ''}
         </div>
+      </div>
+      <div class="pd-portrait">
+        ${renderUrl
+          ? `<img src="${renderUrl}" alt="${profile.name}" onerror="this.style.display='none'">`
+          : `<div style="height:100%;display:flex;align-items:center;justify-content:center;font-size:60px;color:var(--txd)">👤</div>`}
+        <div class="pd-portrait-overlay"></div>
       </div>
     </div>`;
 
